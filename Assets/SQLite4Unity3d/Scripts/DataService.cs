@@ -11,9 +11,10 @@ public class DataService  {
 	private SQLiteConnection _connection;
 
 	public DataService(string DatabaseName){
-
+		Debug.Log ("Create DataService");
 #if UNITY_EDITOR
-            var dbPath = string.Format(@"Assets/StreamingAssets/{0}", DatabaseName);
+            var dbPath = string.Format(@"Assets/StreamingAssets/database/{0}", DatabaseName);
+			Debug.Log(DatabaseName);
 #else
         // check if file exists in Application.persistentDataPath
         var filepath = string.Format("{0}/{1}", Application.persistentDataPath, DatabaseName);
@@ -54,57 +55,90 @@ public class DataService  {
 
 	}
 
-	public void CreateDB(){
-		_connection.DropTable<Person> ();
-		_connection.CreateTable<Person> ();
+	public void CreateDB(){	
+		CrearTablaMarker ();
+		CrearTablaSemana ();
+		CrearTablaPregunta ();
+		CrearTablaRespuesta ();
+	}
 
+	public void CrearTablaMarker(){
+		_connection.DropTable<Marker> ();
+		_connection.CreateTable<Marker> ();
 		_connection.InsertAll (new[]{
-			new Person{
-				Id = 1,
-				Name = "Tom",
-				Surname = "Perez",
-				Age = 56
-			},
-			new Person{
-				Id = 2,
-				Name = "Fred",
-				Surname = "Arthurson",
-				Age = 16
-			},
-			new Person{
-				Id = 3,
-				Name = "John",
-				Surname = "Doe",
-				Age = 25
-			},
-			new Person{
-				Id = 4,
-				Name = "Roberto",
-				Surname = "Huertas",
-				Age = 37
+			new Marker{
+				Nombre = "Marca1",
+				Size = 100,
+				Semana_id = 1
 			}
 		});
 	}
 
-	public IEnumerable<Person> GetPersons(){
-		return _connection.Table<Person>();
+	public void CrearTablaSemana(){
+		_connection.DropTable<Semana> ();
+		_connection.CreateTable<Semana>();
+		_connection.InsertAll (new[]{
+			
+			new Semana{
+				Nombre = "Semana 1"
+			}			
+		});
 	}
 
-	public IEnumerable<Person> GetPersonsNamedRoberto(){
-		return _connection.Table<Person>().Where(x => x.Name == "Roberto");
+	public void CrearTablaPregunta(){
+		_connection.DropTable<Pregunta> ();
+		_connection.CreateTable<Pregunta> ();
+		
+		_connection.InsertAll (new[]{
+			new Pregunta{
+				Semana_id = 1,
+				Texto = "Pregunta 1"
+			}
+		});
 	}
 
-	public Person GetJohnny(){
-		return _connection.Table<Person>().Where(x => x.Name == "Johnny").FirstOrDefault();
+	public void CrearTablaRespuesta(){
+		_connection.DropTable<Respuesta> ();
+		_connection.CreateTable<Respuesta>();
+		_connection.InsertAll(new[]{
+			
+			new Respuesta{
+				Pregunta_id = 1,
+				Texto = "Respuesta 1",
+				Correcto = 1
+			}
+		});
 	}
 
-	public Person CreatePerson(){
-		var p = new Person{
-				Name = "Johnny",
-				Surname = "Mnemonic",
-				Age = 21
+
+	public Pregunta CreatePregunta(int Semana, string pregunta_texto){
+		var p = new Pregunta{
+			Semana_id = Semana,
+			Texto = pregunta_texto,
 		};
 		_connection.Insert (p);
 		return p;
 	}
+
+	public IEnumerable<Marker> GetMarcas()
+	{
+		return _connection.Query<Marker> ("select * from Marker");
+	}
+
+	public IEnumerable<Semana> GetSemanas()
+	{
+		return _connection.Query<Semana> ("select * from Semana");
+	}
+
+	public IEnumerable<Pregunta> GetPreguntas (int semana_id)
+	{
+		return _connection.Query<Pregunta> ("select * from Pregunta where Semana_id = ?", semana_id );
+	}
+
+	public IEnumerable<Respuesta> GetRespuestas (int pregunta_id)
+	{
+		return _connection.Query<Respuesta> ("select * from Respuesta where Pregunta_id = ?", pregunta_id );
+	}
+
+
 }
