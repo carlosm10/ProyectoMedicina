@@ -10,22 +10,14 @@ public class Scene_Manager : MonoBehaviour, ITrackableEventHandler {
 	public GameObject label;
 	public UITexture getImage;
 	public GameObject image;
+	public UILabel getTitle;
+	public UILabel getContent;
 	int markerID;
-	// Use this for initialization
+
 	void Start () {
 		Debug.Log ("Start started!!!");
-		List <Markers> mList = new List<Markers> ();
-			mList.Add (new Markers(0,"Marker0",100));
-			mList.Add (new Markers(1,"Marker1",100));
-			mList.Add (new Markers(2,"Marker2",100));
-			mList.Add (new Markers(3,"Marker3",100));
-			mList.Add (new Markers(4,"Marker4",100));
-			mList.Add (new Markers(5,"Marker5",100));
-			mList.Add (new Markers(6,"Marker6",100));
-			mList.Add (new Markers(7,"Marker7",100));
-			mList.Add (new Markers(8,"Marker8",100));
-			mList.Add (new Markers(9,"Marker9",100));
-		CreateMarker (mList);
+		var list = MarkerList ();
+		CreateMarker (list);
 	}
 
 	public void OnTrackableStateChanged(
@@ -39,16 +31,16 @@ public class Scene_Manager : MonoBehaviour, ITrackableEventHandler {
 			getTextura.gameObject.SetActive(false);
 			getLabel.gameObject.SetActive(false);
 			getImage.gameObject.SetActive(true);
-			Session.markerId= markerID;
-			Debug.Log(Session.markerId);
+			getTitle.gameObject.SetActive(true);
+			getContent.gameObject.SetActive(true);
 
 		} else {
-//			Debug.Log("Prende Helper");
 			getTextura.alpha = 0.1f;
 			getTextura.gameObject.SetActive(true);
 			getLabel.gameObject.SetActive(true);
 			getImage.gameObject.SetActive(false);
-		
+			getTitle.gameObject.SetActive(false);
+			getContent.gameObject.SetActive(false);
 		}
 	}
 
@@ -61,12 +53,12 @@ public class Scene_Manager : MonoBehaviour, ITrackableEventHandler {
 			if (tb is MarkerBehaviour) {
 				MarkerBehaviour mb = tb as MarkerBehaviour;
 				markerID = mb.Marker.MarkerID;
-
 			}
 		}
-		string tmp=getTextureName();
-		loadImage(tmp);
+		Session.markerId= markerID;
+		loadImage();
 	}
+
 	void AddEventHandler(GameObject target){
 		mTrackableBehaviour = target.GetComponent<TrackableBehaviour>();
 		if (mTrackableBehaviour)
@@ -81,7 +73,21 @@ public class Scene_Manager : MonoBehaviour, ITrackableEventHandler {
 		{
 			mTrackableBehaviour.UnregisterTrackableEventHandler(this);
 		}
+	}
 
+	public List<Markers> MarkerList(){
+		List <Markers> mList = new List<Markers> ();
+		mList.Add (new Markers(0,"Marker0",100));
+		mList.Add (new Markers(1,"Marker1",100));
+		mList.Add (new Markers(2,"Marker2",100));
+		mList.Add (new Markers(3,"Marker3",100));
+		mList.Add (new Markers(4,"Marker4",100));
+		mList.Add (new Markers(5,"Marker5",100));
+		mList.Add (new Markers(6,"Marker6",100));
+		mList.Add (new Markers(7,"Marker7",100));
+		mList.Add (new Markers(8,"Marker8",100));
+		mList.Add (new Markers(9,"Marker9",100));
+		return mList;
 	}
 
 	void CreateMarker(List<Markers> lista){
@@ -90,33 +96,13 @@ public class Scene_Manager : MonoBehaviour, ITrackableEventHandler {
 			MarkerAbstractBehaviour mb= mt.CreateMarker(x.id,x.markerName,x.size);
 			mb.gameObject.AddComponent<DefaultTrackableEventHandler>();
 			AddEventHandler(mb.gameObject);
-
 		}
-		
-	}
-	public string getTextureName(){
-		string nombre="";
-		switch (markerID){
-		case 0: nombre = ("esperma 1");
-			break;
-		case 1: nombre = ("fecu 1");
-			break;
-		case 2: nombre = ("fecu 2");
-			break;
-		case 3: nombre = ("fecu 3");
-			break;
-		case 4: nombre = ("fecu 4");
-			break;
-			
-		}
-		return nombre;
 	}
 
-	public void loadImage(string fileName){
-		getImage.mainTexture = Resources.Load (fileName) as Texture;
-
+	public void loadImage(){
+		string file = Session.semana+Session.numSemana+"/"+Session.markerId;
+		getImage.mainTexture = Resources.Load (file) as Texture;
 	}
 
 
-	
 }
