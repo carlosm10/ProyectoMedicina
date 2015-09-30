@@ -11,7 +11,6 @@ public class CheckBox : MonoBehaviour{
 	UILabel label;
 	UIToggle toggle;
 	GameObject newCheck;
-
 	
 	void Start(){
 		createCheckbox ();
