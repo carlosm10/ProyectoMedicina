@@ -18,7 +18,7 @@ public class CreateDBScript : MonoBehaviour {
     private void StartSync()
     {
        	ds = new DataService("medicina.db");
-        //ds.CreateDB();
+//        ds.CreateDB();
 
         
 //        var people = ds.GetPersons ();

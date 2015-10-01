@@ -2,6 +2,9 @@
 using System.Collections;
 
 public class CheckBox : MonoBehaviour{
+	//Base de Datos
+	public DataService ds;
+
 	public GameObject parent;
 //	public UIWidget anchor;
 	public GameObject myCheckbox;
@@ -11,8 +14,12 @@ public class CheckBox : MonoBehaviour{
 	UILabel label;
 	UIToggle toggle;
 	GameObject newCheck;
+
+	//Variable para label
+	string answer;
 	
 	void Start(){
+		getAnswers();
 		createCheckbox ();
 		createCheckbox ();
 		createCheckbox ();
@@ -20,6 +27,15 @@ public class CheckBox : MonoBehaviour{
 	
 	void Update(){
 		
+	}
+
+	//Metodo para obtener las  Respuestas desde la base de datos.
+	public void getAnswers(){
+		ds = new DataService("medicina.db");	/*Especifia nombre de la base de datos*/
+		var respuestas=ds.GetRespuestas(1); /*El numero 1 es el ID de la pregunta que estamos evaluando*/
+		foreach(var respuesta in respuestas){
+			answer = respuesta.Texto;
+		}
 	}
 	
 	public void createCheckbox(){
@@ -35,7 +51,7 @@ public class CheckBox : MonoBehaviour{
 	public void setUp(){
 		label= newCheck.GetComponentInChildren<UILabel>();
 		toggle= newCheck.GetComponent<UIToggle>();
-		label.text=text;
+		label.text=answer;
 		toggle.group = 1;
 		toggle.optionCanBeNone = true;
 		toggle.startsActive = false;
