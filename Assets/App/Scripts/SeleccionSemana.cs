@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class SeleccionSemana : MonoBehaviour {
+	public int sem;
 
 	void Start () {
 	
@@ -13,5 +14,7 @@ public class SeleccionSemana : MonoBehaviour {
 
 	void OnClick(){
 		Application.LoadLevel ("Main");
+		Debug.Log (sem);
+		Session.numSemana = sem;
 	}
 }
