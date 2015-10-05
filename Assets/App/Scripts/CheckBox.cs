@@ -3,7 +3,8 @@ using System.Collections;
 
 public class CheckBox : MonoBehaviour{
 	//Base de Datos
-//	public DataService ds;
+	public DataService ds;
+
 	public GameObject parent;
 	public GameObject myCheckbox;
 	public UILabel pregunta;
@@ -13,14 +14,18 @@ public class CheckBox : MonoBehaviour{
 	UILabel label;
 	UIToggle toggle;
 	GameObject newCheck;
+
 	//Variable para label
 	string answer;
-	int idPregunta=1;
+	//Variable para numero de pregunta
+//	in  t idPregunta=1;
 
 	
 	void Start(){
 		pregunta.text = "Pregunta sobre semana "+Session.numSemana;
-//		getAnswers();
+
+		getAnswers();
+
 		createCheckbox ();
 		createCheckbox ();
 		createCheckbox ();
@@ -32,13 +37,14 @@ public class CheckBox : MonoBehaviour{
 	}
 
 	//Metodo para obtener las  Respuestas desde la base de datos.
-//	public void getAnswers(){
-//		ds = new DataService("medicina.db");	/*Especifia nombre de la base de datos*/
-//		var respuestas=ds.GetRespuestas(idPregunta); /*El numero 1 es el ID de la pregunta que estamos evaluando*/
-//		foreach(var respuesta in respuestas){
-//			answer = respuesta.Texto;
-//		}
-//	}
+	public void getAnswers(){
+		ds = new DataService("medicina.db");	/*Especifia nombre de la base de datos*/
+		ds.CreateDB ();
+		var respuestas=ds.GetRespuestas(); /*El numero 1 es el ID de la pregunta que estamos evaluando*/
+		foreach(var respuesta in respuestas){
+			answer = respuesta.Texto;
+		}
+	}
 	
 	public void createCheckbox(){
 		newCheck = (GameObject)Instantiate(myCheckbox);
@@ -53,8 +59,8 @@ public class CheckBox : MonoBehaviour{
 	public void setUp(){
 		label= newCheck.GetComponentInChildren<UILabel>();
 		toggle= newCheck.GetComponent<UIToggle>();
-//		label.text=answer;
-		label.text=text;
+		label.text=answer;
+//		label.text=text;
 		toggle.group = 1;
 		toggle.optionCanBeNone = true;
 		toggle.startsActive = false;
