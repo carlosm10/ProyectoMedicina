@@ -5,6 +5,7 @@ public static class Session {
 	public static int markerId;
 	public const string semana = "Semana_";
 	public static int numSemana;
+	public static int targetActual=0;
 
 
 

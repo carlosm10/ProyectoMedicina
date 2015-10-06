@@ -17,12 +17,14 @@ public class CheckBox : MonoBehaviour{
 
 	//Variable para label
 	string answer;
+	string question;
 	//Variable para numero de pregunta
 //	in  t idPregunta=1;
 
 	
 	void Start(){
-		pregunta.text = "Pregunta sobre semana "+Session.numSemana;
+		getQuestions();
+		pregunta.text = question;
 
 		getAnswers();
 
@@ -34,6 +36,17 @@ public class CheckBox : MonoBehaviour{
 	
 	void Update(){
 		
+	}
+
+	public void getQuestions(){
+		ds= new DataService("medicina.db");
+		ds.CreateDB();
+		var preguntas= ds.GetPreguntas();
+		foreach(var pregunta in preguntas){
+			question = pregunta.Texto;
+		}
+
+
 	}
 
 	//Metodo para obtener las  Respuestas desde la base de datos.
